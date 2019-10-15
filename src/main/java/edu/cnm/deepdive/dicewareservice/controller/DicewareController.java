@@ -43,12 +43,16 @@ public class DicewareController {
   Passphrase post(@RequestBody Passphrase passphrase,
       @RequestParam(value = "length", defaultValue = "6") int length) {
     List<Word> words = passphrase.getWords();
-    String[] dicewareWords = get(length);
-    for (String dw : dicewareWords) {
-      Word word = new Word();
-      word.setWord(dw);
+    if (words.isEmpty()) {
+      String[] dicewareWords = get(length);
+      for (String dw : dicewareWords) {
+        Word word = new Word();
+        word.setWord(dw);
+        words.add(word);
+      }
+    }
+    for (Word word : words){
       word.setPassphrase(passphrase);
-      words.add(word);
     }
     return passphraseRepository.save(passphrase);
   }

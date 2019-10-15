@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class BundleProvider implements WordProvider {
 
@@ -20,5 +21,4 @@ public class BundleProvider implements WordProvider {
         .map(bundle::getString)
         .collect(Collectors.toList());
   }
-
 }

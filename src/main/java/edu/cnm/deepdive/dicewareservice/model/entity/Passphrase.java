@@ -34,7 +34,7 @@ public class Passphrase {
   @Column(name = "passkey", nullable = false, length = 20, unique = true)
   private String key;
 
-  @OneToMany(mappedBy = "passphrase", cascade = CascadeType.PERSIST)
+  @OneToMany(mappedBy = "passphrase", cascade = CascadeType.ALL)
   @OrderBy("word_id ASC")
   private List<Word> words = new ArrayList<>();
 

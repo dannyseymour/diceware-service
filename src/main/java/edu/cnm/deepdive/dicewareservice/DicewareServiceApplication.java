@@ -1,8 +1,7 @@
 package edu.cnm.deepdive.dicewareservice;
 
 import java.security.SecureRandom;
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Random;
 import java.util.ResourceBundle;
 import org.springframework.boot.SpringApplication;

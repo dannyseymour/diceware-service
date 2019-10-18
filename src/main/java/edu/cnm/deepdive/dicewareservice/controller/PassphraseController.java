@@ -6,7 +6,6 @@ import edu.cnm.deepdive.dicewareservice.model.entity.Word;
 import edu.cnm.deepdive.dicewareservice.service.PassphraseGenerator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import javax.xml.ws.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
@@ -27,21 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/passphrases")
 @ExposesResourceFor(Passphrase.class)
-public class DicewareController<Enitity> {
+public class PassphraseController {
 
   private final PassphraseGenerator generator;
   private final PassphraseRepository passphraseRepository;
 
   @Autowired
-  public DicewareController(PassphraseGenerator generator,
+  public PassphraseController(PassphraseGenerator generator,
       PassphraseRepository passphraseRepository) {
     this.generator = generator;
     this.passphraseRepository = passphraseRepository;
   }
 
-
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public Response<Enitity> Passphrase post(@RequestBody Passphrase passphrase,
+  public ResponseEntity<Passphrase> post(@RequestBody Passphrase passphrase,
       @RequestParam(value = "length", defaultValue = "6") int length) {
     List<Word> words = passphrase.getWords();
     if (words.isEmpty()) {
@@ -52,59 +50,58 @@ public class DicewareController<Enitity> {
         words.add(word);
       }
     }
-    for (Word word : words){
+    for (Word word : words) {
       word.setPassphrase(passphrase);
     }
     passphraseRepository.save(passphrase);
-    return ResponseEntity.created(passphrase.getHref().body(passphrase));
+    return ResponseEntity.created(passphrase.getHref()).body(passphrase);
   }
 
-  @GetMapping(value = "{key: ^\\D.*}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "{key:^\\D.*}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Passphrase get(@PathVariable("key") String key) {
     return passphraseRepository.getFirstByKey(key).get();
   }
 
-  @GetMapping(value = "{id: ^\\d.$}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "{id:^\\d+$}", produces = MediaType.APPLICATION_JSON_VALUE)
   public Passphrase get(@PathVariable("id") long id) {
     return passphraseRepository.findById(id).get();
   }
 
-  @DeleteMapping(value = "{id: ^\\d.$}")
+  @DeleteMapping(value = "{id:^\\d+$}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable("id") long id) {
     passphraseRepository.delete(get(id));
   }
 
-  @PutMapping(value="{id: ^\\d.$}", consumes = MediaType.APPLICATION_JSON_VALUE, produces =MediaType.APPLICATION_JSON_VALUE)
-  public Passphrase put(@PathVariable("id") long id, @RequestBody Passphrase passphrase){
+  @PutMapping(value = "{id:^\\d+$}",
+      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public Passphrase put(@PathVariable long id, @RequestBody Passphrase passphrase) {
     Passphrase existing = get(id);
-    if (passphrase.getKey() != null){
+    if (passphrase.getKey() != null) {
       existing.setKey(passphrase.getKey());
     }
-    if (!passphrase.getWords().isEmpty()){
+    if (!passphrase.getWords().isEmpty()) {
       existing.getWords().forEach((word) -> word.setPassphrase(null));
       existing.getWords().clear();
       passphrase.getWords().forEach((word) -> word.setPassphrase(existing));
       existing.getWords().addAll(passphrase.getWords());
     }
-    //TODO regenerate random passphrase if requested
+    // TODO Re-generate random passphrase, if requested.
     return passphraseRepository.save(existing);
   }
 
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Iterable<Passphrase> getAll() {
+    return passphraseRepository.getAllByOrderByIdAsc();
+  }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoSuchElementException.class)
   public void notFound() {}
 
-
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(Exception.class)
   public void badRequest() {}
-
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Iterable<Passphrase> getAll(){
-    return passphraseRepository.getAllByOrderById();
-  }
 
 }
 

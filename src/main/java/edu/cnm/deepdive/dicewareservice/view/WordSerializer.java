@@ -7,20 +7,23 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import java.io.IOException;
 import edu.cnm.deepdive.dicewareservice.model.entity.Word;
+import java.io.IOException;
 import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
 public class WordSerializer {
-  public static class Serializer extends JsonSerializer<Word>{
+
+  public static class Serializer extends JsonSerializer<Word> {
 
     @Override
     public void serialize(Word word, JsonGenerator jsonGenerator,
         SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(word.getWord());
+      jsonGenerator.writeString(word.getWord());
     }
+
   }
+
   public static class Deserializer extends JsonDeserializer<Word> {
 
     @Override
@@ -31,6 +34,6 @@ public class WordSerializer {
       return word;
     }
 
-
   }
+
 }

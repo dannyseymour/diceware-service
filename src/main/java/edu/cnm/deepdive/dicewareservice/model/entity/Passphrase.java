@@ -28,7 +28,6 @@ public class Passphrase {
 
   private static EntityLinks links;
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "passphrase_id", updatable = false, nullable = false)
@@ -69,16 +68,18 @@ public class Passphrase {
     return words;
   }
 
-  public URI getHref(){
+  public URI getHref() {
     return links.linkForSingleResource(Passphrase.class, id).toUri();
   }
 
   @PostConstruct
-  private void initLinks(){
+  private void initLinks() {
     String ignore = links.toString();
   }
+
   @Autowired
   public void setLinks(EntityLinks links) {
     Passphrase.links = links;
   }
+
 }

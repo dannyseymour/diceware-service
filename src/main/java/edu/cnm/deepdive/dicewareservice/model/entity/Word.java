@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
 
 @Entity
@@ -28,7 +26,7 @@ public class Word {
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "passphrase_id", nullable = false, updatable = false)
-  private edu.cnm.deepdive.dicewareservice.model.entity.Passphrase passphrase;
+  private Passphrase passphrase;
 
   public Long getId() {
     return id;
@@ -42,11 +40,11 @@ public class Word {
     this.word = word;
   }
 
-  public edu.cnm.deepdive.dicewareservice.model.entity.Passphrase getPassphrase() {
+  public Passphrase getPassphrase() {
     return passphrase;
   }
 
-  public void setPassphrase(edu.cnm.deepdive.dicewareservice.model.entity.Passphrase passphrase) {
+  public void setPassphrase(Passphrase passphrase) {
     this.passphrase = passphrase;
   }
 

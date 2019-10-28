@@ -1,8 +1,6 @@
 package edu.cnm.deepdive.dicewareservice;
+
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,16 +14,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
-
 @SpringBootApplication
 @EnableWebSecurity
 @EnableResourceServer
-
 public class DicewareServiceApplication extends ResourceServerConfigurerAdapter {
 
   @Value("${oauth.clientId}")
   private String clientId;
-
 
   public static void main(String[] args) {
     SpringApplication.run(DicewareServiceApplication.class, args);
@@ -49,8 +44,8 @@ public class DicewareServiceApplication extends ResourceServerConfigurerAdapter 
   @Override
   public void configure(HttpSecurity http) throws Exception {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//    http.authorizeRequests().anyRequest().anonymous();
+   // http.authorizeRequests().anyRequest().anonymous();
     http.authorizeRequests().anyRequest().hasRole("USER");
-
   }
+
 }

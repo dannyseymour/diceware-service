@@ -38,9 +38,10 @@ public class PassphraseController {
     this.passphraseRepository = passphraseRepository;
   }
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Passphrase> post(@RequestBody Passphrase passphrase,
-      @RequestParam(value = "length", defaultValue = "6") int length) {
+      @RequestParam(defaultValue = "6") int length) {
     List<Word> words = passphrase.getWords();
     if (words.isEmpty()) {
       String[] dicewareWords = generator.passphrase(length);
@@ -58,18 +59,18 @@ public class PassphraseController {
   }
 
   @GetMapping(value = "{key:^\\D.*}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Passphrase get(@PathVariable("key") String key) {
+  public Passphrase get(@PathVariable String key) {
     return passphraseRepository.getFirstByKey(key).get();
   }
 
   @GetMapping(value = "{id:^\\d+$}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Passphrase get(@PathVariable("id") long id) {
+  public Passphrase get(@PathVariable long id) {
     return passphraseRepository.findById(id).get();
   }
 
   @DeleteMapping(value = "{id:^\\d+$}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable("id") long id) {
+  public void delete(@PathVariable long id) {
     passphraseRepository.delete(get(id));
   }
 
